@@ -6,7 +6,7 @@ services:
     ports:
       - "3307:3306"   # 호스트 3306 -> 컨테이너 3306
     environment:
-      MYSQL_ROOT_PASSWORD: 1234        # 원하는 비번
+      MYSQL_ROOT_PASSWORD: root1234        # 원하는 비번
       MYSQL_DATABASE: study_batch          # 기본 생성할 DB 이름
       MYSQL_USER: batch_user               # 선택사항 (안 써도 됨)
       MYSQL_PASSWORD: batch1234           # 선택사항 (위 유저 비번)
