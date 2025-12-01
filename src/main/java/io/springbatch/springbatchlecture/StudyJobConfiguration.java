@@ -13,40 +13,35 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
-public class DBJobConfiguration {
+public class StudyJobConfiguration {
 
+    // private final JobBuilderFactory jobBuilderFactory; // 5.0 이전
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job DBjob() {
-        return new JobBuilder("DBJob", jobRepository)
-                .start(step1())
-                .next(step2())
+    public Job StudyJob() { // Singleton : 같은 이름의 Bean 생성 불가
+        return new JobBuilder("StudyJob", jobRepository)
+                .start(StudyStep1())
+                .next(StudyStep2())
                 .build();
     }
 
     @Bean
-    public Step step1() {
-        return new StepBuilder("step1", jobRepository)
+    public Step StudyStep1() {
+        return new StepBuilder("StudyStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("======================");
-                    System.out.println(" >> Step 1");
-                    System.out.println("======================");
-
+                    System.out.println("StudyStep1 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step step2() {
-        return new StepBuilder("step2", jobRepository)
+    public Step StudyStep2() {
+        return new StepBuilder("StudyStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("======================");
-                    System.out.println(" >> Step 2");
-                    System.out.println("======================");
-
+                    System.out.println("StudyStep2 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();

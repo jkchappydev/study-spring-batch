@@ -35,9 +35,9 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: embedded
+      initialize-schema: never
     job:
-      name: DBJob
+      name: StudyJob # 새로운 Job 이 추가되고 실행해야 할 때 해당 내용 변경
 
   jpa:
     hibernate:
