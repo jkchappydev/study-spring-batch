@@ -35,9 +35,10 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: never
+      initialize-schema: always
     job:
-      name: StudyJob # 새로운 Job 이 추가되고 실행해야 할 때 해당 내용 변경
+      enabled: false # Boot 자동 실행 끄기 (JobRunner 구현 시 false)
+    # name: instanceJob # Boot 가 자동으로 실행할 Job 이름 (새로운 Job 이 추가되고 실행해야 할 때 해당 내용 변경)
 
   jpa:
     hibernate:
