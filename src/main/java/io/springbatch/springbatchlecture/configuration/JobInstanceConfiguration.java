@@ -1,4 +1,4 @@
-package io.springbatch.springbatchlecture;
+package io.springbatch.springbatchlecture.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -13,35 +13,34 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
-public class JobExecutionConfiguration {
+public class JobInstanceConfiguration {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job executionJob() {
-        return new JobBuilder("executionJob", jobRepository)
-                .start(executionStep1())
-                .next(executionStep2())
+    public Job instanceJob() {
+        return new JobBuilder("instanceJob", jobRepository)
+                .start(instanceStep1())
+                .next(instanceStep2())
                 .build();
     }
 
     @Bean
-    public Step executionStep1() {
-        return new StepBuilder("executionStep1", jobRepository)
+    public Step instanceStep1() {
+        return new StepBuilder("instanceStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("executionStep1 was executed");
+                    System.out.println("instanceStep1 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step executionStep2() {
-        return new StepBuilder("executionStep2", jobRepository)
+    public Step instanceStep2() {
+        return new StepBuilder("instanceStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("executionStep2 was executed");
-                    // throw new RuntimeException("executionStep2 has failed"); // 강제 실패 발생 (BatchStatus: failed, 현재 JobParameters 는 "user1")
+                    System.out.println("instanceStep2 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
