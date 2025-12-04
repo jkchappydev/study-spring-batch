@@ -23,7 +23,7 @@ public class JobRunner implements ApplicationRunner {
                 .addString("name", "user2") // user1 로 한번 더 실행하면 예외발생
                         .toJobParameters();
 
-        jobLauncher.run(instanceJob, jobParameters);
+        // jobLauncher.run(instanceJob, jobParameters);
     }
 
 }
