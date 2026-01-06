@@ -1,0 +1,15 @@
+### sync 실행
+POST http://localhost:8080/syncBatch
+Content-Type: application/json
+
+{
+  "id": "leaven"
+}
+
+### async 실행
+POST http://localhost:8080/asyncBatch
+Content-Type: application/json
+
+{
+  "id": "leaven"
+}

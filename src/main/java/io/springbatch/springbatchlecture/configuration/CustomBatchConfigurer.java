@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 // Spring Batch 5.x 부터는 BasicBatchConfigurer 없어짐
 // -> DefaultBatchConfiguration 상속해서 필요한 것만 override 하게 변경
-@Configuration
+// @Configuration
 @RequiredArgsConstructor
 public class CustomBatchConfigurer extends DefaultBatchConfiguration {
 
