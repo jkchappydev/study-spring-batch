@@ -16,36 +16,54 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
-public class JobConfiguration {
+public class FlowConfiguration {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    // ========== SimpleJob ==========
+    // ========== FlowJob ==========
     @Bean
-    public Job jobConfigurationJob() {
-        return new JobBuilder("jobConfigurationJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(jobConfigurationStep1())
-                .next(jobConfigurationStep2())
+    public Job flowConfigurationJob() {
+        return new JobBuilder("flowConfigurationJob", jobRepository)
+                .start(jobConfigurationFlow())
+                .next(flowConfigurationStep5())
+                .end()
                 .build();
     }
 
     @Bean
-    public Step jobConfigurationStep1() {
-        return new StepBuilder("jobConfigurationStep1", jobRepository)
+    public Flow jobConfigurationFlow() {
+        return new FlowBuilder<Flow>("jobConfigurationFlow")
+                .start(flowConfigurationStep3())
+                .next(flowConfigurationStep4())
+                .build();
+    }
+
+    @Bean
+    public Step flowConfigurationStep3() {
+        return new StepBuilder("flowConfigurationStep3", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("jobConfigurationStep1 was executed");
+                    System.out.println("flowConfigurationStep3 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step jobConfigurationStep2() {
-        return new StepBuilder("jobConfigurationStep2", jobRepository)
+    public Step flowConfigurationStep4() {
+        return new StepBuilder("flowConfigurationStep4", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("jobConfigurationStep2 was executed");
+                    System.out.println("flowConfigurationStep4 was executed");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step flowConfigurationStep5() {
+        return new StepBuilder("flowConfigurationStep5", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("flowConfigurationStep5 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
