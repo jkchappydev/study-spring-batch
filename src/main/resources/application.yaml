@@ -1,3 +1,6 @@
+server:
+  port: 18080
+
 spring:
   profiles:
     active: mysql # 기본 활성 프로필 설정 (여기서 활성 프로필 변경하며 실행)
@@ -35,10 +38,12 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: always
+      initialize-schema: always # Spring Batch 메타 테이블(BATCH_*)이 없으면 자동 생성
+      # table-prefix: SYSTEM_ # 기본적으로 BATCH_ 인데, SYSTEM_ 로 변경. 이 때, 기본 스키마(schema-mysql.sql)는 BATCH_로 생성되는데, prefix 만 SYSTEM_로 바꾸면 런타임때 SYSTEM_*을 찾다가 테이블이 없으므로 실패함
+      # schema: classpath:batch/schema-mysql-system.sql # 앞의 SYSTEM_을 쓰려면 BATCH_→SYSTEM_로 치환된 스키마 파일을 resources 경로에 직접 넣어야 해서(파일 없으면 부팅 실패) 일단 기본 스키마를 쓰기 위해 주석 처리
     job:
-      enabled: false # Boot 자동 실행 끄기 (JobRunner 구현 시 false)
-    #  name: jobLauncherJob # Boot 가 자동으로 실행할 Job 이름 (새로운 Job 이 추가되고 실행해야 할 때 해당 내용 변경)
+      name: ${job.name:NONE} # Parameter Arguments 에 --job.name=jobConfigurationJob 처럼 설정을 주면, jobConfigurationJob 이 여기 속성에 바인딩 된다.
+      # enabled: false # Spring Boot 의 Job 자동 실행 활성화
 
   jpa:
     hibernate:
