@@ -1,12 +1,11 @@
 package io.springbatch.springbatchlecture.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.job.flow.Flow;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -23,29 +22,41 @@ public class JobConfiguration {
 
     // ========== SimpleJob ==========
     @Bean
-    public Job jobConfigurationJob() {
-        return new JobBuilder("jobConfigurationJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(jobConfigurationStep1())
-                .next(jobConfigurationStep2())
+    public Job simpleJobConfigurationJob() {
+        return new JobBuilder("simpleJobConfigurationJob", jobRepository)
+                .start(simpleJobConfigurationStep1())
+                .next(simpleJobConfigurationStep2())
+                .next(simpleJobConfigurationStep3())
                 .build();
     }
 
     @Bean
-    public Step jobConfigurationStep1() {
-        return new StepBuilder("jobConfigurationStep1", jobRepository)
+    public Step simpleJobConfigurationStep1() {
+        return new StepBuilder("simpleJobConfigurationStep1", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("jobConfigurationStep1 was executed");
+                    System.out.println("simpleJobConfigurationStep1 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step jobConfigurationStep2() {
-        return new StepBuilder("jobConfigurationStep2", jobRepository)
+    public Step simpleJobConfigurationStep2() {
+        return new StepBuilder("simpleJobConfigurationStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    System.out.println("jobConfigurationStep2 was executed");
+                    System.out.println("simpleJobConfigurationStep2 was executed");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step simpleJobConfigurationStep3() {
+        return new StepBuilder("simpleJobConfigurationStep3", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    // 강제로 실패
+                    chunkContext.getStepContext().getStepExecution().setStatus(BatchStatus.FAILED); // 상태코드를 FALIED 로 함
+                    contribution.setExitStatus(ExitStatus.STOPPED); // 종료코드를 STOPPED 로 함
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
