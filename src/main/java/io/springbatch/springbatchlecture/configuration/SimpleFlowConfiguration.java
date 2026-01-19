@@ -20,24 +20,45 @@ public class SimpleFlowConfiguration {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    // ==== Flow Job 구성 ====
     @Bean
     public Job simpleFlowConfigurationJob() {
         return new JobBuilder("simpleFlowConfigurationJob", jobRepository)
-                // ==== SimpleFlow ====
-                .start(simpleFlow())
-                .next(simpleFlowStep3())
-                .end() // SimpleFlow 생성
-                // =====================
-                .build();
+                .start(simpleFlow1())
+                    .on("COMPLETED")
+                    .to(simpleFlow2())
+                .from(simpleFlow1())
+                    .on("FAILED")
+                    .to(simpleFlow3())
+                .end().build();
     }
 
     @Bean
-    public Flow simpleFlow() {
+    public Flow simpleFlow1() {
         FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("simpleFlow");
         flowBuilder.start(simpleFlowStep1())
                 .next(simpleFlowStep2())
-                .end(); // SimpleFlow 생성
+                .end();
+
+        return flowBuilder.build();
+    }
+
+    @Bean
+    public Flow simpleFlow2() {
+        FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("simpleFlow");
+        flowBuilder.start(simpleFlow3())
+                .next(simpleFlowStep5())
+                .next(simpleFlowStep6())
+                .end();
+
+        return flowBuilder.build();
+    }
+
+    @Bean
+    public Flow simpleFlow3() {
+        FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("simpleFlow");
+        flowBuilder.start(simpleFlowStep3())
+                .next(simpleFlowStep4())
+                .end();
 
         return flowBuilder.build();
     }
@@ -57,6 +78,7 @@ public class SimpleFlowConfiguration {
         return new StepBuilder("simpleFlowStep2", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println("simpleFlowStep2 was executed");
+                    // throw new RuntimeException("simpleFlowStep2 was failed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
@@ -67,6 +89,36 @@ public class SimpleFlowConfiguration {
         return new StepBuilder("simpleFlowStep3", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
                     System.out.println("simpleFlowStep3 was executed");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step simpleFlowStep4() {
+        return new StepBuilder("simpleFlowStep4", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("simpleFlowStep4 was executed");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step simpleFlowStep5() {
+        return new StepBuilder("simpleFlowStep5", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("simpleFlowStep5 was executed");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step simpleFlowStep6() {
+        return new StepBuilder("simpleFlowStep6", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("simpleFlowStep6 was executed");
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
