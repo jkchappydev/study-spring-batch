@@ -1,4 +1,4 @@
-package io.springbatch.springbatchlecture.configuration;
+package io.springbatch.springbatchlecture.rowmapper;
 
 import io.springbatch.springbatchlecture.domain.Customer7;
 import org.springframework.jdbc.core.RowMapper;
