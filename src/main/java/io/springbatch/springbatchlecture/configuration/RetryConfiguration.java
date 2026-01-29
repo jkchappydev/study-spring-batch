@@ -44,8 +44,12 @@ public class RetryConfiguration {
                 .processor(retryItemProcessor())
                 .writer(items -> items.forEach(System.out::println))
                 .faultTolerant()
-                .retry(RetryableException.class)
-                .retryLimit(2)
+                .skip(RetryableException.class)
+                .skipLimit(2)
+                // .retry(RetryableException.class)
+                // .retryLimit(2)
+                // 직접 RetryPolicy 인터페이스 구현
+                .retryPolicy(retryPolicy())
                 .build();
     }
 
@@ -62,6 +66,17 @@ public class RetryConfiguration {
     @Bean
     public ItemProcessor<? super String, String> retryItemProcessor() {
         return new RetryItemProcessor();
+    }
+
+    @Bean
+    public RetryPolicy retryPolicy() {
+        Map<Class<? extends Throwable>, Boolean> exceptionClass = new HashMap<>();
+        // 1. 예외 대상 설정
+        exceptionClass.put(RetryableException.class, true);
+        // 2. limitCount 설정
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(2, exceptionClass);
+
+        return retryPolicy;
     }
 
 }
