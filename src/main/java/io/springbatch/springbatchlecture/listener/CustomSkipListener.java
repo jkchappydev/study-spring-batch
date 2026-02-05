@@ -1,0 +1,24 @@
+package io.springbatch.springbatchlecture.listener;
+
+import org.springframework.batch.core.SkipListener;
+
+public class CustomSkipListener implements SkipListener<Integer, String> {
+
+    @Override
+    public void onSkipInRead(Throwable t) {
+        System.out.println(">> onSkipInRead : " + t.getMessage());
+    }
+
+    @Override
+    public void onSkipInWrite(String item, Throwable t) {
+        System.out.println(">> onSkipInWrite : " + item);
+        System.out.println(">> onSkipInWrite : " + t.getMessage());
+    }
+
+    @Override
+    public void onSkipInProcess(Integer item, Throwable t) {
+        System.out.println(">> onSkipInProcess : " + item);
+        System.out.println(">> onSkipInProcess : " + t.getMessage());
+    }
+
+}
