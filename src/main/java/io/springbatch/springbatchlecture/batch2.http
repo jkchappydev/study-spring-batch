@@ -1,0 +1,24 @@
+### startBatch
+POST http://localhost:8080/batch/start
+Content-Type: application/json
+
+{
+  "jobName": "jobOperationConfigurationJob",
+  "id": "leaven"
+}
+
+### stopBatch
+POST http://localhost:8080/batch/stop
+Content-Type: application/json
+
+{
+  "jobName": "jobOperationConfigurationJob"
+}
+
+### restartBatch
+POST http://localhost:8080/batch/restart
+Content-Type: application/json
+
+{
+  "jobName": "jobOperationConfigurationJob"
+}
