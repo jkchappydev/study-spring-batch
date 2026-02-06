@@ -43,6 +43,12 @@ dependencies {
     // test 에서 lombok 활성화
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Quartz
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+
+    // Apache HttpClient (권장: 5.x)
+    implementation 'org.apache.httpcomponents.client5:httpclient5'
 }
 
 tasks.named('test') {
