@@ -27,7 +27,7 @@ public class ProductPartitioner implements Partitioner {
             ExecutionContext value = new ExecutionContext();
 
             result.put("partition" + number, value);  // partition0, partition1, ...
-            value.put("product", productVO); // partition 이 처리 대상 상품을 ExecutionContext 에 저장한다.
+            value.putString("type", String.valueOf(productVO.getType())); // partition 이 처리 대상 상품을 ExecutionContext 에 저장한다.
 
             number++;
         }

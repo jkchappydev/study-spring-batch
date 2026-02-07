@@ -21,14 +21,14 @@ public class ApiJobConfiguration {
     private final PlatformTransactionManager transactionManager;
     private final ApiStartTasklet apiStartTasklet;
     private final ApiEndTasklet apiEndTasklet;
-    private final Step jobStep;
+    private final Step jobSteps;
 
     @Bean
     public Job apiJob() {
         return new JobBuilder("apiJob", jobRepository)
                 .listener(new JobListener())
                 .start(apiStep1())
-                .next(jobStep) // JobStep : Step 안에서 Job 실행
+                .next(jobSteps) // JobSteps : Step 안에서 Job 실행
                 .next(apiStep2())
                 .build();
     }

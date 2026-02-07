@@ -93,7 +93,7 @@ public class ApiStepConfiguration {
     // 실제 DB 에 접속해서 각각의 Product 타입 별로 값을 가져온 다음에 멀티 스레드 환경에서 실행될 수 있도록 구성
     @Bean
     @StepScope
-    public ItemReader<ProductVO> productItemReader(@Value("#{stepExecutionContext['product']}") ProductVO productVO) throws Exception {
+    public ItemReader<ProductVO> productItemReader(@Value("#{stepExecutionContext['type']}") String type) throws Exception {
         JdbcPagingItemReader<ProductVO> reader = new JdbcPagingItemReader<>();
 
         reader.setDataSource(dataSource);
@@ -112,8 +112,8 @@ public class ApiStepConfiguration {
 
         // 멀티 스레드로 각각의 ItemReader 를 할당해야함. Partition 에는 멀티 스레드로 StepExecution, StepExecutionContext 가 만들어져서 각 스레드에게 할당된다.
         // 따라서 스레드들은 자기만의 StepExecutionContext 를 가지고 있다.
-        // 그리고 각 스레드는 각각의 제품의 타입을 하나씩 가지고 있고,
-        reader.setParameterValues(QueryGenerator.getParameterForQuery("type", productVO.getType()));
+        // 그리고 각 스레드는 각각의 제품의 타입(type)을 하나씩 가지고 있고, 그 값으로 where type = :type 조건을 바인딩해서 자기 타입 데이터만 읽는다.
+        reader.setParameterValues(QueryGenerator.getParameterForQuery("type", type));
         reader.setQueryProvider(queryProvider);
         reader.afterPropertiesSet();
 

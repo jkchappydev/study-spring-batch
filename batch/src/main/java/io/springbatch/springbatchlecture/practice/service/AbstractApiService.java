@@ -31,7 +31,7 @@ public abstract class AbstractApiService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        ApiInfo apiInfo = ApiInfo.builder().apiRequestList(apiRequest).build();
+        ApiInfo apiInfo = ApiInfo.builder().apiRequestList(apiRequest.getItems()).build();
 
         return doApiService(restTemplate, apiInfo);
     }
