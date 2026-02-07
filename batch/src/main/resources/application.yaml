@@ -43,7 +43,7 @@ spring:
       # schema: classpath:batch/schema-mysql-system.sql # 앞의 SYSTEM_을 쓰려면 BATCH_→SYSTEM_로 치환된 스키마 파일을 resources 경로에 직접 넣어야 해서(파일 없으면 부팅 실패) 일단 기본 스키마를 쓰기 위해 주석 처리
     job:
       name: ${job.name:NONE} # Parameter Arguments 에 --job.name=jobConfigurationJob 처럼 설정을 주면, jobConfigurationJob 이 여기 속성에 바인딩 된다.
-      # enabled: false # Spring Boot 의 Job 자동 실행 활성화
+      enabled: false # Spring Boot 의 Job 자동 실행 활성화
 
   jpa:
     hibernate:
