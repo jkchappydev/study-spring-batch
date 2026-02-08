@@ -5,10 +5,13 @@ import io.springbatch.springbatchlecture.practice.batch.domain.ApiResponseVO;
 import io.springbatch.springbatchlecture.practice.service.AbstractApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
+import org.springframework.core.io.FileSystemResource;
 
 @RequiredArgsConstructor
-public class ApiItemWriter2 implements ItemWriter<ApiRequestVO> {
+public class ApiItemWriter2 extends FlatFileItemWriter<ApiRequestVO> {
 
     private final AbstractApiService apiService;
 
@@ -16,6 +19,15 @@ public class ApiItemWriter2 implements ItemWriter<ApiRequestVO> {
     public void write(Chunk<? extends ApiRequestVO> chunk) throws Exception {
         ApiResponseVO responseVO = apiService.service(chunk);
         System.out.println("responseVO = " + responseVO);
+
+        // 응답 내용을 파일로 저장
+        chunk.forEach(item -> item.setApiResponseVO(responseVO));
+
+        super.setResource(new FileSystemResource("/Users/jeong-geunchan/IdeaProjects/study-spring-batch/batch/src/main/resources/product2.txt"));
+        super.open(new ExecutionContext());
+        super.setLineAggregator(new DelimitedLineAggregator<>());
+        super.setAppendAllowed(true);
+        super.write(chunk);
     }
     
 }
